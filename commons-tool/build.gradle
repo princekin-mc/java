@@ -1,0 +1,60 @@
+// 项目组和版本
+group = 'top.mstudy'
+version = '1.0.0-SNAPSHOT'
+
+// 运行的环境：java环境
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+// 指定所使用的的仓库，mavenCentral()表示使用中央仓库
+// 此时项目中所需要的jar包都会从这个中央仓库下载至本地指定仓库
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('http://maven.aliyun.com/nexus/content/groups/public/')
+    }
+}
+
+/**
+ * gradle工程所有的jar包的坐标都在dependencies属性内放置
+ * 每一个jar包的坐标都有三个基本元素组成：group，name，version
+ * testCompile表示该jar包在测试的时候起作用,该属性为jar包的作用域
+ * 我们在gradle里面添加坐标的时候都要带上jar包的作用域
+ */
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.4.13'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.4.13'
+    implementation 'org.apache.commons:commons-lang3:3.11'
+    implementation 'io.swagger:swagger-annotations:1.5.21'
+    implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
+    implementation 'cn.hutool:hutool-all:5.5.7'
+    implementation 'eu.bitwalker:UserAgentUtils:1.20'
+    implementation 'com.google.zxing:core:3.2.1'
+    implementation 'com.alibaba:fastjson:1.2.79'
+    implementation 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// java的版本和编码集等信息，这里记得和idea中配置的一样，都使用你自己的java版本
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    options.compilerArgs << '-parameters'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+description = '一个用于日常Java开发的常用工具的集成项目'
